@@ -117,7 +117,7 @@ planaria.start({
   onblock: async e => {
     const arr = await save(db.collection('c'), e.tx)
     for (const { b } of arr) {
-      await db.collection('u').delete({ b })
+      await db.collection('u').deleteMany({ b })
     }
   },
   onstart: async e => {
