@@ -1,0 +1,8 @@
+.env
+bus
+db
+node_modules
+tape.txt
+c
+lmdb
+.DS_Store

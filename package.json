@@ -1,0 +1,15 @@
+{
+  "name": "c-neon",
+  "version": "0.0.1",
+  "description": "C:// on Neon Planaria",
+  "main": "planaria.js",
+  "author": "Kevin Johnson (KevinEJohn)",
+  "license": "ISC",
+  "dependencies": {
+    "bitquery": "^0.3.137",
+    "mongodb": "^3.2.7",
+    "neonplanaria": "0.0.19",
+    "node-gzip": "^1.1.2",
+    "node-lmdb": "^0.7.0"
+  }
+}
