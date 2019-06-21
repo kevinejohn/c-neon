@@ -4,15 +4,14 @@ const path = require('path')
 const lmdb = require('node-lmdb')
 const fs = require('fs')
 
-const lmdbPath = path.join(__dirname, './lmdb')
+const filepath = path.join(__dirname, './data/c')
+const lmdbPath = path.join(__dirname, './data/lmdb')
 const en = new lmdb.Env()
 en.open({
   path: lmdbPath,
   mapSize: 2 * 1024 * 1024 * 1024,
   maxDbs: 3
 })
-const db_mediatype = en.openDbi({ name: 'mediatype', create: false })
-const db_b = en.openDbi({ name: 'b', create: false })
 
 planarium.start({
   name: 'C://',
@@ -22,8 +21,9 @@ planarium.start({
       url: 'mongodb://localhost:27017',
       address: 'c-hash'
     })
-    const filepath = path.join(__dirname, './c')
-    return { db, filepath }
+    const db_mediatype = en.openDbi({ name: 'mediatype', create: true })
+    const db_b = en.openDbi({ name: 'b', create: true })
+    return { db, db_mediatype, db_b, filepath }
   },
   onquery: e => {
     let code = Buffer.from(e.query, 'base64').toString()
@@ -41,7 +41,7 @@ planarium.start({
       const id = req.params.id
       const filename = path.join(e.core.filepath, id)
       const txn = en.beginTxn()
-      const value = txn.getString(db_mediatype, id)
+      const value = txn.getString(e.core.db_mediatype, id)
       txn.commit()
       if (value) {
         res.setHeader('Content-type', value)
@@ -62,12 +62,12 @@ planarium.start({
     e.app.get('/b/:id', (req, res) => {
       const id = req.params.id
       const txn = en.beginTxn()
-      const c_hash = txn.getString(db_b, id)
+      const c_hash = txn.getString(e.core.db_b, id)
       if (!c_hash) {
         txn.commit()
         return res.status(404).send('')
       }
-      const value = txn.getString(db_mediatype, c_hash)
+      const value = txn.getString(e.core.db_mediatype, c_hash)
       txn.commit()
       if (value) {
         res.setHeader('Content-type', value)

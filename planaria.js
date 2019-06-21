@@ -6,12 +6,12 @@ const path = require('path')
 const crypto = require('crypto')
 const fs = require('fs')
 
-const cPath = path.join(__dirname, './c')
+const cPath = path.join(__dirname, './data/c')
 if (!fs.existsSync(cPath)) {
-  fs.mkdirSync(cPath)
+  fs.mkdirSync(cPath, { recursive: true })
 }
 
-const lmdbPath = path.join(__dirname, './lmdb')
+const lmdbPath = path.join(__dirname, './data/lmdb')
 if (!fs.existsSync(lmdbPath)) {
   fs.mkdirSync(lmdbPath)
 }
@@ -27,11 +27,7 @@ const db_c = en.openDbi({ name: 'c', create: true })
 
 let db
 function sleep (ms = 1000) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve()
-    }, ms)
-  })
+  return new Promise(resolve => setTimeout(() => resolve(), ms))
 }
 function connect () {
   return new Promise((resolve, reject) => {
@@ -80,7 +76,7 @@ async function save (collection, txs) {
         b: txid,
         height,
         block,
-        time
+        time: time || +new Date()
       })
       fs.writeFile(path.join(cPath, hash), data, function (er) {
         if (er) {
@@ -99,6 +95,7 @@ async function save (collection, txs) {
     }
   }
   await collection.insertMany(saveTxs)
+  return saveTxs
 }
 planaria.start({
   filter: {
@@ -118,7 +115,10 @@ planaria.start({
     await save(db.collection('u'), [e.tx])
   },
   onblock: async e => {
-    await save(db.collection('c'), e.tx)
+    const arr = await save(db.collection('c'), e.tx)
+    for (const { b } of arr) {
+      await db.collection('u').delete({ b })
+    }
   },
   onstart: async e => {
     if (!e.tape.self.start) {
@@ -132,13 +132,14 @@ planaria.start({
         '-p',
         '27017-27019:27017-27019',
         '-v',
-        process.cwd() + '/db:/data/db',
+        `${path.join(__dirname, './data/mongodb')}:/data/db`,
         'mongo:4.0.4'
       ])
     }
     await connect()
+    await db.collection('u').deleteMany() // Clear current mempool
     if (e.tape.self.start) {
-      await db.collection('c').deleteMany({ 'blk.i': { $gt: e.tape.self.end } })
+      await db.collection('c').deleteMany({ 'height': { $gt: e.tape.self.end } })
     }
   }
 })
