@@ -76,7 +76,7 @@ async function save (collection, txs) {
         b: txid,
         height,
         block,
-        time: time || +new Date()
+        time: time || Math.floor(+new Date() / 1000)
       })
       fs.writeFile(path.join(cPath, hash), data, function (er) {
         if (er) {
