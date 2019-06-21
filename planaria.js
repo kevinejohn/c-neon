@@ -137,7 +137,7 @@ planaria.start({
       ])
     }
     await connect()
-    await db.collection('u').deleteMany() // Clear current mempool
+    // await db.collection('u').deleteMany() // Clear current mempool
     if (e.tape.self.start) {
       await db.collection('c').deleteMany({ 'height': { $gt: e.tape.self.end } })
     }
