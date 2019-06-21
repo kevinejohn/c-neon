@@ -57,7 +57,7 @@ async function save (collection, txs) {
   for (const tx of txs) {
     try {
       const { lb2, b2, s3: type, s4: encoding, s5: name } = tx.out.shift()
-      const { i: height, h: block, t: time } = tx.blk
+      const { i: height, h: block, t: time } = tx.blk || {}
       let data = Buffer.from(lb2 || b2, 'base64')
       const txid = tx.tx.h
       if (encoding === 'gzip') {
