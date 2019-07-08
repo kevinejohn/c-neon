@@ -4,8 +4,8 @@ const path = require('path')
 const lmdb = require('node-lmdb')
 const fs = require('fs')
 
-const filepath = path.join(__dirname, './data/c')
-const lmdbPath = path.join(__dirname, './data/lmdb')
+const filepath = path.join(process.cwd(), './data/c')
+const lmdbPath = path.join(process.cwd(), './data/lmdb')
 const en = new lmdb.Env()
 en.open({
   path: lmdbPath,

@@ -6,12 +6,12 @@ const path = require('path')
 const crypto = require('crypto')
 const fs = require('fs')
 
-const cPath = path.join(__dirname, './data/c')
+const cPath = path.join(process.cwd(), './data/c')
 if (!fs.existsSync(cPath)) {
   fs.mkdirSync(cPath, { recursive: true })
 }
 
-const lmdbPath = path.join(__dirname, './data/lmdb')
+const lmdbPath = path.join(process.cwd(), './data/lmdb')
 if (!fs.existsSync(lmdbPath)) {
   fs.mkdirSync(lmdbPath)
 }
@@ -132,7 +132,7 @@ planaria.start({
         '-p',
         '27017-27019:27017-27019',
         '-v',
-        `${path.join(__dirname, './data/mongodb')}:/data/db`,
+        `${path.join(process.cwd(), './data/mongodb')}:/data/db`,
         'mongo:4.0.4'
       ])
     }
