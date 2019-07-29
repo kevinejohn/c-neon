@@ -8,7 +8,7 @@
   "dependencies": {
     "bitquery": "^0.3.137",
     "mongodb": "^3.2.7",
-    "neonplanaria": "0.0.22",
+    "neonplanaria": "0.0.28",
     "node-gzip": "^1.1.2",
     "node-lmdb": "^0.7.0"
   }
