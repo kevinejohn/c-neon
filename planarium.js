@@ -16,6 +16,7 @@ en.open({
 planarium.start({
   name: 'C://',
   port: 3000,
+  host: '127.0.0.1', // Optional
   onstart: async () => {
     const db = await bitquery.init({
       url: 'mongodb://localhost:27017',
