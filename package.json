@@ -6,9 +6,9 @@
   "author": "Kevin Johnson (KevinEJohn)",
   "license": "ISC",
   "dependencies": {
-    "bitquery": "^0.3.137",
+    "bitquery": "^0.3.138",
     "mongodb": "^3.2.7",
-    "neonplanaria": "git+https://github.com/kevinejohn/neonplanaria.git",
+    "neonplanaria": "0.0.31",
     "node-gzip": "^1.1.2",
     "node-lmdb": "^0.7.0"
   }
